@@ -1,2 +1,2 @@
 # Desenvolvimento-Web
-Laboratório 08
+Laboratórios
