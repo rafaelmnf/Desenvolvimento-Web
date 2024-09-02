@@ -1,8 +1,6 @@
-let operacaoAtual = ''; 
-let resultado = 0;    
-let operador = '';     
-let operacao = ''; 
-
+let operacaoAtual = "";   
+let operador = "";       
+let resultado = 0; 
 
 function addNum(numero) {
     operacaoAtual += numero;
@@ -10,7 +8,7 @@ function addNum(numero) {
 }
 
 function addOperacao(operacao) {
-    if (operacaoAtual !== '') {
+    if (operacaoAtual !== "") {
         operador = operacao;
         operacaoAtual += operacao;
         atualizarTela(operacaoAtual);
@@ -23,18 +21,18 @@ function calcular() {
         atualizarTela(resultado);
         operacaoAtual = resultado.toString();
     } catch (e) {
-        atualizarTela('erro');
-        operacaoAtual = '';
+        atualizarTela("erro");
+        operacaoAtual = "";
     }
 }
 
 function limpar() {
-    operacaoAtual = '';
-    operador = '';
+    operacaoAtual = "";
+    operador = "";
     resultado = 0;
     atualizarTela(0);
 }
 
 function atualizarTela(valor) {
-    document.getElementById('resultado').innerHTML = valor;
+    document.getElementById("resultado").innerHTML = valor;
 }
