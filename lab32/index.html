@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Brasil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <div id="quiz-container">
+            <h1>Quiz Sobre Curiosidades e Momentos Históricos do Brasil</h1>
+            <div id="question-container"> <!-- Container onde as perguntas serão carregadas -->
+                <!-- Perguntas serão inseridas aqui pelo JavaScript -->
+                <div id="timer"></div> <!-- Adiciona o temporizador -->
+            </div>
+            <button onclick="enviarRespostas()">Enviar Resposta</button> <!-- Botão para submeter respostas -->
+            <div id="resultado">
+                <h2>Resultados</h2>
+                <div class="result-content">
+                    <p>Você acertou <span id="acertos">0</span> de <span id="total">0</span> perguntas.</p>
+                    <p id="feedback"></p>
+                </div>
+            </div> <!-- Container onde o resultado será exibido -->
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
