@@ -3,10 +3,10 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const app = express();
+require('dotenv').config()
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'public'))); // deixar com css
 
 let verificationCodes = {}; // Objeto para armazenar códigos temporariamente
 
@@ -14,8 +14,8 @@ let verificationCodes = {}; // Objeto para armazenar códigos temporariamente
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'seu-email@gmail.com',
-    pass: 'sua-senha-app' // Use uma senha de app, não a senha principal
+    user: process.env.conta_gmail, //variáveis de ambiente
+    pass: process.env.senha_gmail
   }
 });
 
@@ -24,9 +24,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname,'public', 'index.html'));
 });
 
+
 // Rota para enviar o código de verificação
-app.post('/send-verification-email', (req, res) => {
+app.post('/send-verification', (req, res) => {
   const { email } = req.body;
+
+  console.log('Enviando para:', email); // Log do e-mail que está sendo enviado
 
   if (!email) {
     return res.status(400).json({ message: 'E-mail é obrigatório' });
@@ -37,7 +40,7 @@ app.post('/send-verification-email', (req, res) => {
 
   // Enviar e-mail com o código de verificação
   transporter.sendMail({
-    from: 'seu-email@gmail.com',
+    from: `Empresa <${process.env.conta_gmail}>`,
     to: email,
     subject: 'Seu código de verificação',
     text: `Seu código de verificação é: ${verificationCode}`
@@ -58,17 +61,35 @@ app.post('/verify-code', (req, res) => {
   const { email, code } = req.body;
 
   if (!email || !code) {
-    return res.status(400).json({ message: 'E-mail e código são obrigatórios' });
+    return res.status(400).json({ message: 'E-mail e código são necessários para prosseguir' });
   }
 
-  // Verificar se o código informado está correto
-  if (verificationCodes[email] && verificationCodes[email] == code) {
+  // Verificação do código dado
+  if (verificationCodes[email] == code) {
     return res.status(200).json({ message: 'Verificação bem-sucedida!' });
   } else {
     return res.status(400).json({ message: 'Código de verificação incorreto.' });
   }
 });
 
+// Rota para enviar a mensagem original após a verificação
+app.post('/send-message', (req, res) => {
+  const { name, email, message } = req.body;
+
+  transporter.sendMail({
+    from: `Empresa <${process.env.conta_gmail}>`,
+    to: email,  // E-mail da empresa que vai receber a mensagem
+    subject: `Nova mensagem de ${name}`,
+    text: `${message}`
+  }, (error, info) => {
+    if (error) {
+      return res.status(500).json({ message: 'Erro ao enviar a mensagem' });
+    }
+
+    return res.status(200).json({ message: 'Mensagem enviada com sucesso!' });
+  });
+});
+
 app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
+  console.log(`Servidor rodando em http://localhost:3000`);
 });
